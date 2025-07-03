@@ -5,7 +5,6 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db' # เชื่อมฐานข้อมูล
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # ปิด feature ที่ไม่จำเป็น
 db = SQLAlchemy(app)
-db = SQLAlchemy(app)
 
 # สร้าง Model นักเรียน
 class Student(db.Model):
