@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- <h2>แก้ไขข้อมูลนักเรียน</h2>
+<form method="post">
+    รหัสนักเรียน: <input type="text" name="student_id" value="{{ student.student_id }}"><br>
+    ชื่อ: <input type="text" name="name" value="{{ student.name }}"><br>
+    คะแนนสอบ: <input type="number" step="0.01" name="score" value="{{ student.score }}"><br>
+    <input type="submit" value="อัปเดต">
+</form> -->
+
+<div class="container mt-4">
+    <h2 class="mb-4">แก้ไขข้อมูลนักเรียน</h2>
+
+    <form method="post" class="border p-4 rounded shadow-sm bg-light">
+        <div class="mb-3">
+            <label for="student_id" class="form-label">รหัสนักเรียน</label>
+            <input type="text" class="form-control" id="student_id" name="student_id" value="{{ student.student_id }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">ชื่อ</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ student.name }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="score" class="form-label">คะแนนสอบ</label>
+            <input type="number" step="0.01" class="form-control" id="score" name="score" value="{{ student.score }}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">✅ อัปเดต</button>
+        <a href="/" class="btn btn-secondary">↩️ กลับ</a>
+    </form>
+</div>
+
+
+{% endblock %}

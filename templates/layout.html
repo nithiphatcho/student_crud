@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Student CRUD{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="/">หน้าแรก</a>
+  <a href="/create">เพิ่มนักเรียน</a>
+</nav>
+
+<div class="container">
+    {% block content %}
+    <!-- เนื้อหาของแต่ละหน้าจะมาแทนที่ตรงนี้ -->
+    {% endblock %}
+</div>
+
+</body>
+</html>

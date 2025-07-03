@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- เชื่อมโยงไฟล์ CSS -->
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+
+<h2>รายชื่อนักเรียน</h2>
+<!-- <a href="/create" class="btn btn-warning mb-3">➕ เพิ่มนักเรียน</a> -->
+<button class="btn btn-success mb-3" onclick="location.href='/create'">+ เพิ่มนักเรียน</button>
+
+<table class="table table-bordered table-striped text-center">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>รหัส</th>
+            <th>ชื่อ</th>
+            <th>คะแนน</th>
+            <th>สถานะ</th>
+            <th>จัดการ</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if students %}
+        {% for s in students %}
+        <tr>
+            <td>{{ s.id }}</td>
+            <td>{{ s.student_id }}</td>
+            <td>{{ s.name }}</td>
+            <td>{{ s.score }}</td>
+            <td>
+                {% if s.score >= 80 %}
+                    <span class="text-success fw-bold">ผ่าน</span>
+                {% else %}
+                    <span class="text-danger fw-bold">ไม่ผ่าน</span>
+                {% endif %}
+            </td>
+            <td>
+                <button class="btn btn-warning me-2" onclick="location.href='/update/{{ s.id }}'">แก้ไข</button>
+                <button class="btn btn-danger btn-sm" onclick="if(confirm('คุณแน่ใจว่าจะลบ?')) location.href='/delete/{{ s.id }}'">ลบ</button>
+                <!-- <a href="/update/{{ s.id }}">แก้ไข</a> |
+                <a href="/delete/{{ s.id }}" onclick="return confirm('ต้องการลบหรือไม่?')">ลบ</a> -->
+            </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="5" class="text-center text-muted">ไม่มีข้อมูลนักเรียน</td>
+        </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+{% endblock %}
