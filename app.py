@@ -65,7 +65,7 @@ from flask import Flask, render_template, request, redirect, url_for
 import requests
 
 app = Flask(__name__)
-API_URL = 'http://localhost:3000/api/students'
+API_URL = 'https://student-crud-kcdm.onrender.com/api/students' # ควรแก้
 
 @app.route('/')
 def index():
