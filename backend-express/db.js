@@ -18,9 +18,10 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT || 5432,
-  ssl:{
-    rejectUnauthorized: false, // บน Render ต้องตั้งเป็น false
-  },
+  ssl: false
+  // {
+  //   rejectUnauthorized: false, // บน Render ต้องตั้งเป็น false
+  // },
 });
 
 module.exports = pool; // ใช้ async/await ได้
