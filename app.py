@@ -65,7 +65,7 @@ from flask import Flask, render_template, request, redirect, url_for
 import requests
 
 app = Flask(__name__)
-API_URL = 'https://student-crud-api.onrender.com/api/students'  # เปลี่ยนเป็น URL Backend จริง
+API_URL = 'https://https://student-crud-1-g4uc.onrender.com/api/students'  # เปลี่ยนเป็น URL Backend จริง
 
 @app.route('/')
 def index():
