@@ -51,7 +51,7 @@ const db = require('../db'); // ใช้ Pool จาก pg
 // GET all students
 router.get('/', async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM student');
+    const result = await db.query('SELECT * FROM students ORDER BY id ASC;');
     res.json(result.rows); // ข้อมูลอยู่ใน result.rows
   } catch (err) {
     res.status(500).json({ error: err.message });
