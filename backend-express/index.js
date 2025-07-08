@@ -9,6 +9,7 @@ app.use(express.json());
 
 app.use('/api/students', studentsRouter);
 
+// Start server
 app.listen(3000, () => {
   console.log('✅ Express API ready at http://localhost:3000');
 });

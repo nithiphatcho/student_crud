@@ -1,12 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<!-- เชื่อมโยงไฟล์ CSS -->
-<!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
-
 <h2>รายชื่อนักเรียน</h2>
-<!-- <a href="/create" class="btn btn-warning mb-3">➕ เพิ่มนักเรียน</a> -->
 <button class="btn btn-success mb-3" onclick="location.href='/create'">+ เพิ่มนักเรียน</button>
 
 <table class="table table-bordered table-striped text-center">
@@ -24,31 +19,34 @@
         {% if students %}
         {% for s in students %}
         <tr>
-            <td>{{ s.id }}</td>
-            <td>{{ s.student_id }}</td>
-            <td>{{ s.name }}</td>
-            <td>{{ s.score }}</td>
+            <td>{{ s.id if s.id is defined else '-' }}</td>
+            <td>{{ s.student_id if s.student_id is defined else '-' }}</td>
+            <td>{{ s.name if s.name is defined else '-' }}</td>
+            <td>{{ s.score if s.score is defined else '-' }}</td>
             <td>
-                {% if s.score >= 80 %}
+                {% if s.score is defined and s.score|float >= 80 %}
                     <span class="text-success fw-bold">ผ่านแล้ว</span>
-                {% else %}
+                {% elif s.score is defined %}
                     <span class="text-danger fw-bold">ไม่ผ่าน</span>
+                {% else %}
+                    <span class="text-muted">-</span>
                 {% endif %}
             </td>
             <td>
+                {% if s.id is defined %}
                 <button class="btn btn-warning me-2" onclick="location.href='/update/{{ s.id }}'">แก้ไข</button>
                 <button class="btn btn-danger btn-sm" onclick="if(confirm('คุณแน่ใจว่าจะลบ?')) location.href='/delete/{{ s.id }}'">ลบ</button>
-                <!-- <a href="/update/{{ s.id }}">แก้ไข</a> |
-                <a href="/delete/{{ s.id }}" onclick="return confirm('ต้องการลบหรือไม่?')">ลบ</a> -->
+                {% else %}
+                <span class="text-muted">ไม่สามารถจัดการได้</span>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
         {% else %}
         <tr>
-            <td colspan="5" class="text-center text-muted">ไม่มีข้อมูลนักเรียน</td>
+            <td colspan="6" class="text-center text-muted">ไม่มีข้อมูลนักเรียน</td>
         </tr>
         {% endif %}
     </tbody>
 </table>
-
 {% endblock %}

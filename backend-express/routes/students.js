@@ -46,54 +46,53 @@
 // backend-express/routes/students.js
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const db = require('../db'); // ใช้ Pool จาก pg
 
-// GET
+// GET all students
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM student');
-    res.json(rows);
+    const result = await db.query('SELECT * FROM student');
+    res.json(result.rows); // ข้อมูลอยู่ใน result.rows
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// POST
+// POST new student
 router.post('/', async (req, res) => {
   const { student_id, name, score } = req.body;
   try {
-    const [result] = await db.query(
-      'INSERT INTO student (student_id, name, score) VALUES (?, ?, ?)',
+    const result = await db.query(
+      'INSERT INTO student (student_id, name, score) VALUES ($1, $2, $3) RETURNING id',
       [student_id, name, score]
     );
-    res.json({ id: result.insertId });
+    res.json({ id: result.rows[0].id });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// PUT
+// PUT update student
 router.put('/:id', async (req, res) => {
   const { student_id, name, score } = req.body;
   try {
-    const [result] = await db.query(
-      'UPDATE student SET student_id = ?, name = ?, score = ? WHERE id = ?',
+    const result = await db.query(
+      'UPDATE student SET student_id = $1, name = $2, score = $3 WHERE id = $4',
       [student_id, name, score, req.params.id]
     );
-    res.json({ updated: result.affectedRows });
+    res.json({ updated: result.rowCount });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// DELETE
+// DELETE student
 router.delete('/:id', async (req, res) => {
   try {
-    const [result] = await db.query(
-      'DELETE FROM student WHERE id = ?',
-      [req.params.id]
-    );
-    res.json({ deleted: result.affectedRows });
+    const result = await db.query('DELETE FROM student WHERE id = $1', [
+      req.params.id,
+    ]);
+    res.json({ deleted: result.rowCount });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -69,8 +69,18 @@ API_URL = 'http://localhost:3000/api/students'
 
 @app.route('/')
 def index():
-    res = requests.get(API_URL)
-    students = res.json()
+    try:
+        res = requests.get(API_URL)
+        students = res.json()
+
+        # ถ้าข้อมูลเป็น list ของ string (JSON string) ต้องแปลงก่อน
+        if students and isinstance(students[0], str):
+            import json
+            students = [json.loads(s) for s in students]
+    except Exception as e:
+        print("Error loading students:", e)
+        students = []
+
     return render_template('index.html', students=students)
 
 @app.route('/create', methods=['GET', 'POST'])
