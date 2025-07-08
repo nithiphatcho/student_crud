@@ -65,22 +65,24 @@ from flask import Flask, render_template, request, redirect, url_for
 import requests
 
 app = Flask(__name__)
-API_URL = 'https://student-crud-kcdm.onrender.com/api/students' # ควรแก้
+API_URL = 'https://student-crud-api.onrender.com/api/students'  # เปลี่ยนเป็น URL Backend จริง
 
 @app.route('/')
 def index():
+    students = []
     try:
-        res = requests.get(API_URL)
-        students = res.json()
+        res = requests.get(API_URL, timeout=5)
+        if res.status_code == 200:
+            students = res.json()
 
-        # ถ้าข้อมูลเป็น list ของ string (JSON string) ต้องแปลงก่อน
-        if students and isinstance(students[0], str):
-            import json
-            students = [json.loads(s) for s in students]
+            # กรณีข้อมูลเป็น list ของ JSON string ให้แปลง (ถ้าจริง)
+            if students and isinstance(students[0], str):
+                import json
+                students = [json.loads(s) for s in students]
+        else:
+            print(f"API responded with status {res.status_code}: {res.text}")
     except Exception as e:
         print("Error loading students:", e)
-        students = []
-
     return render_template('index.html', students=students)
 
 @app.route('/create', methods=['GET', 'POST'])
@@ -91,7 +93,12 @@ def create():
             'name': request.form['name'],
             'score': float(request.form['score'])
         }
-        requests.post(API_URL, json=data)
+        try:
+            res = requests.post(API_URL, json=data, timeout=5)
+            if res.status_code != 200 and res.status_code != 201:
+                print(f"Create API error {res.status_code}: {res.text}")
+        except Exception as e:
+            print("Error creating student:", e)
         return redirect(url_for('index'))
     return render_template('create.html')
 
@@ -103,15 +110,39 @@ def update(id):
             'name': request.form['name'],
             'score': float(request.form['score'])
         }
-        requests.put(f"{API_URL}/{id}", json=data)
+        try:
+            res = requests.put(f"{API_URL}/{id}", json=data, timeout=5)
+            if res.status_code != 200:
+                print(f"Update API error {res.status_code}: {res.text}")
+        except Exception as e:
+            print("Error updating student:", e)
         return redirect(url_for('index'))
-    students = requests.get(API_URL).json()
-    student = next((s for s in students if s['id'] == id), None)
+
+    students = []
+    student = None
+    try:
+        res = requests.get(API_URL, timeout=5)
+        if res.status_code == 200:
+            students = res.json()
+            student = next((s for s in students if s['id'] == id), None)
+        else:
+            print(f"Get students API error {res.status_code}: {res.text}")
+    except Exception as e:
+        print("Error loading students for update:", e)
+
+    if student is None:
+        return "Student not found", 404
+
     return render_template('update.html', student=student)
 
 @app.route('/delete/<int:id>')
 def delete(id):
-    requests.delete(f"{API_URL}/{id}")
+    try:
+        res = requests.delete(f"{API_URL}/{id}", timeout=5)
+        if res.status_code != 200:
+            print(f"Delete API error {res.status_code}: {res.text}")
+    except Exception as e:
+        print("Error deleting student:", e)
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
